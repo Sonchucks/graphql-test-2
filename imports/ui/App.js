@@ -2,7 +2,9 @@ import React, { Component, Fragment } from 'react'
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import ResolutionForm from './ResolutionForm'
+import ResolutionForm from './ResolutionForm';
+import RegisterForm from './RegisterForm';
+import LoginForm from './LoginForm';
 
 const resolutionsQuery = gql`
   query Resolutions {
@@ -26,6 +28,9 @@ export default class App extends Component {
             } else {
               return (
                 <Fragment>
+                  <LoginForm />
+                  <RegisterForm />
+                  <button onClick={() => {Meteor.logout()}}>Logout</button>
                   <h1>Resolutions</h1>
                   <ResolutionForm />
                   <ul>
