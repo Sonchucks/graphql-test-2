@@ -2,9 +2,10 @@ import React, { Component, Fragment } from 'react'
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const GET_HI = gql`
-  {
-    hi
+import ResolutionForm from './ResolutionForm'
+
+const resolutionsQuery = gql`
+  query Resolutions {
     resolutions {
       _id
       name
@@ -15,9 +16,9 @@ const GET_HI = gql`
 export default class App extends Component {
   render() {
     return (
-      <Query query={GET_HI}>
+      <Query query={resolutionsQuery}>
         {
-          ({ loading, error, data }) => {
+          ({ loading, error, data: { resolutions } }) => {
             if (loading) {
               return <h1>Loading...</h1>
             } else if (error) {
@@ -25,11 +26,12 @@ export default class App extends Component {
             } else {
               return (
                 <Fragment>
-                  <h1>{data.hi}</h1>
+                  <h1>Resolutions</h1>
+                  <ResolutionForm />
                   <ul>
                     {
-                      data.resolutions.map(resolution => (
-                        <li key={resolution.id}>
+                      resolutions.map(resolution => (
+                        <li key={resolution._id}>
                           {resolution.name}
                         </li>
                       ))

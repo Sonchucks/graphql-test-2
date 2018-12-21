@@ -27,9 +27,10 @@ const testResolver = {
 
 const resolvers = merge(testResolver, ResolutionsResolvers);
 
+
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 })
 
-createApolloServer({ schema })
+createApolloServer({ schema });
