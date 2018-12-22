@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react'
-import { Query } from 'react-apollo';
+import React, { Fragment } from 'react'
+import { Query, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import ResolutionForm from './ResolutionForm';
@@ -15,39 +15,43 @@ const resolutionsQuery = gql`
   }
 `;
 
-export default class App extends Component {
-  render() {
-    return (
-      <Query query={resolutionsQuery}>
-        {
-          ({ loading, error, data: { resolutions } }) => {
-            if (loading) {
-              return <h1>Loading...</h1>
-            } else if (error) {
-              console.log(error);
-            } else {
-              return (
-                <Fragment>
-                  <LoginForm />
-                  <RegisterForm />
-                  <button onClick={() => {Meteor.logout()}}>Logout</button>
-                  <h1>Resolutions</h1>
-                  <ResolutionForm />
-                  <ul>
-                    {
-                      resolutions.map(resolution => (
-                        <li key={resolution._id}>
-                          {resolution.name}
-                        </li>
-                      ))
-                    }
-                  </ul>
-                </Fragment>
-              )
-            }
+const App = ({client: { resetStore }}) => {
+  console.log(resetStore)
+  return (
+    <Query query={resolutionsQuery}>
+      {
+        ({ loading, error, data: { resolutions } }) => {
+          if (loading) {
+            return <h1>Loading...</h1>
+          } else if (error) {
+            console.log(error);
+          } else {
+            return (
+              <Fragment>
+                <LoginForm reset={resetStore} />
+                <RegisterForm reset={resetStore} />
+                <button onClick={() => {
+                  Meteor.logout()
+                  resetStore();
+                }}>Logout</button>
+                <h1>Resolutions</h1>
+                <ResolutionForm />
+                <ul>
+                  {
+                    resolutions.map(resolution => (
+                      <li key={resolution._id}>
+                        {resolution.name}
+                      </li>
+                    ))
+                  }
+                </ul>
+              </Fragment>
+            )
           }
         }
-      </Query>
-    )
-  }
+      }
+    </Query>
+  )
 }
+
+export default withApollo(App);
