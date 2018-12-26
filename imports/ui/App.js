@@ -3,6 +3,8 @@ import { Query, withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import ResolutionForm from './ResolutionForm';
+import GoalForm from './GoalForm';
+import Goal from './resolutions/Goal'
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 
@@ -11,6 +13,11 @@ const resolutionsQuery = gql`
     resolutions {
       _id
       name
+      goals {
+        _id
+        name
+        completed
+      }
     }
     user {
       _id
@@ -48,9 +55,17 @@ class App extends Component {
                   <ul>
                     {
                       resolutions.map(resolution => (
-                        <li key={resolution._id}>
-                          {resolution.name}
-                        </li>
+                        <Fragment key={resolution._id}>
+                          <li>
+                            {resolution.name}
+                            <ul>
+                              {resolution.goals.map(goal => (
+                                <Goal key={goal._id} goal={goal} />
+                              ))}
+                            </ul>
+                          </li>
+                          <GoalForm resolutionID={resolution._id}/>
+                        </Fragment>
                       ))
                     }
                   </ul>

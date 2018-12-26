@@ -2,19 +2,20 @@ import React, { Component, Fragment } from 'react'
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const createResolution = gql`
-  mutation createResolution($name: String!) {
-    createResolution(name: $name) {
+const createGoal = gql`
+  mutation createGoal($name: String!, $resolutionID: String!) {
+    createGoal(name: $name, resolutionID: $resolutionID) {
       _id
     }
   }
 `;
 
-export default class ResolutionForm extends Component {
+export default class GoalForm extends Component {
   submitMutation = (postMutation) => {
     postMutation({
       variables: {
-        name: this.name.value
+        name: this.name.value,
+        resolutionID: this.props.resolutionID
       },
       refetchQueries: ['Resolutions']
     })
@@ -27,11 +28,12 @@ export default class ResolutionForm extends Component {
   }
   render() {
     return (
-      <Mutation mutation={createResolution}>
-        {createResolution => (
+      <Mutation mutation={createGoal}>
+        {createGoal => (
           <Fragment>
             <input type='text' ref={input => {this.name = input}}/>
-            <button onClick={() => this.submitMutation(createResolution)}>
+            <button onClick={() => this.submitMutation(createGoal)}
+            >
               Submit
             </button>
           </Fragment>
